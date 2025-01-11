@@ -24,6 +24,8 @@ public class PacketHandler : MonoBehaviour
                 Debug.LogError("Couldn't grab reference of GameMap TileMap!");
             }
 
+            map.ClearAllTiles();
+
             Message message = Message.Create(MessageSendMode.reliable, ClientToServerPacket.MainGameLoaded);
             NetworkManager.Instance.Client.Send(message);
         }
@@ -75,7 +77,7 @@ public class PacketHandler : MonoBehaviour
         SceneManager.UnloadSceneAsync("LobbyScene");
     }
 
-    [MessageHandler((ushort)ServerToClientPacket.ChunkInfo)]
+    [MessageHandler((ushort)ServerToClientPacket.LoadChunk)]
     private static void ChunkUpdate(Message message)
     {
         //ChunkLoader.LoadChunk(map, message);

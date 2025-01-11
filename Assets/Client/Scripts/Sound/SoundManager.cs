@@ -7,7 +7,7 @@ public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance;
     public List<SoundSerialize> registerSounds;
-    [HideInInspector] public Dictionary<string, AudioClip> sounds;
+    public Dictionary<string, AudioClip> sounds = new Dictionary<string, AudioClip>();
 
     private AudioSource source;
 
@@ -18,6 +18,7 @@ public class SoundManager : MonoBehaviour
         source = GetComponent<AudioSource>();
         foreach(SoundSerialize sound in registerSounds)
         {
+            Debug.Log($"{sound}");
             sounds.Add(sound.sound.ToString(), sound.clip);
         }
     }

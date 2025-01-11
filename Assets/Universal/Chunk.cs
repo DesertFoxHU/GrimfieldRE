@@ -19,7 +19,7 @@ public class Chunk
 
     public readonly int ChunkX;
     public readonly int ChunkY;
-    public List<TileData> Tiles = new List<TileData>();
+    public List<TileData> Tiles = new();
 
     public Chunk(int chunkX, int chunkY)
     {

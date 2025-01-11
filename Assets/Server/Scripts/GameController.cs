@@ -1,4 +1,6 @@
 using Riptide;
+using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -15,8 +17,8 @@ namespace ServerSide
 
         [HideInInspector] public ChunkManager chunkManager;
         public int Seed = -1;
-        [Range(1, 64)] public int SizeX;
-        [Range(1, 64)] public int SizeY;
+        [Range(1, 128)] public int SizeX;
+        [Range(1, 128)] public int SizeY;
         public TurnHandler turnHandler;
 
         private Tilemap map;
@@ -37,7 +39,7 @@ namespace ServerSide
 
         public Entity SpawnUnit(ServerPlayer? player, Vector3Int position, EntityType type)
         {
-            EntityDefinition definition = FindObjectOfType<DefinitionRegistry>().Find(type);
+            EntityDefinition definition = FindAnyObjectByType<DefinitionRegistry>().Entities.Find(x => x.Type == type);
             if (definition == null)
             {
                 Debug.LogError($"Can't find any EntityDefinition with this type: {type}");
@@ -115,19 +117,6 @@ namespace ServerSide
                 }
             }
 
-            for (int x = 7; x <= SizeX; x+=11)
-            {
-                for (int y = 7; y <= SizeY; y+=11)
-                {
-                    if (Utils.Roll(40))
-                    {
-                        GenerateTile(map, x, y, TileType.Flag);
-                        Vector3Int position = new Vector3Int(x, y, 0);
-                        ServerSide.TerritoryRenderer.Instance.territories.Add(new ServerTerritory(position, ushort.MaxValue, Color.black, map.GetTileRange(position, 4)));
-                    }
-                }
-            }
-
             map.RefreshAllTiles();
             ServerSide.TerritoryRenderer.Instance.RenderAll();
             Debug.Log("Map is generated!");
@@ -147,7 +136,7 @@ namespace ServerSide
         {
             TileDefinition definition = DefinitionRegistry.Instance.Find(type);
             int spriteIndex = definition.GetRandomSpriteIndex();
-            Debug.Log($"Generated spriteIndex {spriteIndex} for {type}");
+            Debug.Log($"Generated spriteIndex {spriteIndex} {x} {y} for {type}");
 
             GrimfieldTile tile = map.GetOrInit(new Vector3Int(x, y, 0), definition);
             tile.spriteIndex = spriteIndex;
@@ -158,15 +147,25 @@ namespace ServerSide
 
         public void SendMapToAll()
         {
-            chunkManager.chunks.ForEach(chunk => NetworkManager.Instance.Server.SendToAll(chunk.AsPacket(MessageSendMode.reliable, (ushort)ServerToClientPacket.ChunkInfo)));
+            NetworkManager.players.ForEach(p =>
+            {
+                SendMapAsync(p.PlayerId);
+            });
         }
 
-        public void SendMapTo(ushort clientID)
+        public async void SendMapAsync(ushort clientID)
         {
-            chunkManager.chunks.ForEach(chunk =>
-            NetworkManager.Instance.Server.Send(chunk.AsPacket(
-                MessageSendMode.reliable,
-                (ushort)ServerToClientPacket.ChunkInfo), clientID));
+            ServerSender.InitChunkLoadingState(NetworkManager.Find(clientID), chunkManager.chunks.Count);
+
+            int delay = 20;
+            foreach (var chunk in chunkManager.chunks)
+            {
+                NetworkManager.Instance.Server.Send(chunk.AsPacket(
+                    MessageSendMode.reliable,
+                    (ushort)ServerToClientPacket.LoadChunk
+                    ), clientID);
+                await Task.Delay(delay);
+            }
         }
     }
 }

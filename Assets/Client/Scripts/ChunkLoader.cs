@@ -20,11 +20,12 @@ internal class ChunkLoader
             {
                 string raw = message.GetString();
                 string[] split = raw.Split('|');
-                Vector3Int pos = new Vector3Int(int.Parse(split[0]), int.Parse(split[1]), 0);
+                Vector3Int pos = new(int.Parse(split[0]), int.Parse(split[1]), 0);
                 TileType tileType = (TileType)Enum.Parse(typeof(TileType), split[2]);
                 int spriteIndex = int.Parse(split[3]);
 
-                GrimfieldTile tile = map.GetOrInit(pos, DefinitionRegistry.Instance.Find(tileType));
+                TileDefinition tileDef = DefinitionRegistry.Instance.Find(tileType);
+                GrimfieldTile tile = map.GetOrInit(pos, tileDef);
                 tile.spriteIndex = spriteIndex;
 
                 map.RefreshTile(pos);

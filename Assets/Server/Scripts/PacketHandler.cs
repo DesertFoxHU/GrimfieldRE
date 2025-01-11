@@ -76,7 +76,7 @@ namespace ServerSide
 
             if (isEveryoneRead)
             {
-                FindObjectOfType<GameController>().StartMatchGame();
+                FindAnyObjectByType<GameController>().StartMatchGame();
             }
         }
 
@@ -85,7 +85,7 @@ namespace ServerSide
         {
             ServerPlayer player = NetworkManager.Find(clientID);
             player.IsMainSceneLoaded = true;
-            gameController.SendMapTo(clientID);
+            gameController.SendMapAsync(clientID);
 
             bool everyoneReady = true;
             foreach (ServerPlayer sPlayer in NetworkManager.players)
@@ -153,7 +153,7 @@ namespace ServerSide
             player.IncrementBuildingBought(type);
             ServerSender.SendNewBuilding(player, building);
 
-            FindObjectOfType<ServerSide.TerritoryRenderer>().TryAddNew(map, player, building);
+            FindAnyObjectByType<ServerSide.TerritoryRenderer>().TryAddNew(map, player, building);
 
             Debug.Log($"Added new building with GUID: {building.ID}");
         }

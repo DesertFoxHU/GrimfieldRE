@@ -26,7 +26,7 @@ public class ChunkManager
     public void SetTile(int x, int y, TileType type, int spriteIndex)
     {
         Chunk chunk = GetChunkByPosition(x, y);
-        Vector3Int v3 = new Vector3Int(x, y, 0);
+        Vector3Int v3 = new(x, y, 0);
         Chunk.TileData data = chunk.GetOrCreate(v3);
         data.Type = type;
         data.SpriteIndex = spriteIndex;

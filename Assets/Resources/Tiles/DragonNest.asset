@@ -36,4 +36,4 @@ MonoBehaviour:
   m_ColliderType: 1
   isClaimed: 0
   definition: {fileID: 11400000, guid: a52317774a0e5464eafd8a2360addccd, type: 2}
-  spriteIndex: 0
+  spriteIndex: 1

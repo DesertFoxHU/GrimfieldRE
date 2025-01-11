@@ -18,7 +18,7 @@ namespace ServerSide
         public List<AbstractBuilding> Buildings { get; private set; } = new List<AbstractBuilding>();
         //How many times a building bought by the player
         public Dictionary<BuildingType, int> BuildingBought { get; private set; } = new();
-        public List<Entity> entities = new List<Entity>();
+        public List<Entity> entities = new();
 
         public ServerPlayer(ushort playerId, string name, Color color)
         {

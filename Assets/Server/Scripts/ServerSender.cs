@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
 
 namespace ServerSide
 {
@@ -135,6 +136,13 @@ namespace ServerSide
             NetworkManager.Instance.Server.SendToAll(message);
 
             building.owner.Buildings.Remove(building);
+        }
+
+        public static void InitChunkLoadingState(ServerPlayer player, int chunkCount)
+        {
+            Message message = Message.Create(MessageSendMode.reliable, ServerToClientPacket.InitChunkLoadingState);
+            message.Add(chunkCount);
+            NetworkManager.Instance.Server.Send(message, player.PlayerId);
         }
     }
 }
