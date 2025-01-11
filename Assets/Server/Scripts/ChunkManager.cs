@@ -8,7 +8,7 @@ public class ChunkManager
     public int MapSizeX { get; private set; }
     public int MapSizeY { get; private set; }
 
-    public List<Chunk> chunks = new List<Chunk>();
+    public List<Chunk> chunks = new();
 
     public ChunkManager(int mapSizeX, int mapSizeY)
     {

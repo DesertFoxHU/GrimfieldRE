@@ -29,7 +29,7 @@ public class PacketHandler : MonoBehaviour
         }
         else if(scene.name == "LobbyScene")
         {
-            FindObjectOfType<ChatPanel>().SetEnabled(true);
+            FindAnyObjectByType<ChatPanel>().SetEnabled(true);
         }
     }
 
@@ -37,7 +37,7 @@ public class PacketHandler : MonoBehaviour
     private static void OnAlertRecieve(Message message)
     {
         string msg = message.GetString();
-        FindObjectOfType<MessageDisplayer>().SetMessage(msg);
+        FindAnyObjectByType<MessageDisplayer>().SetMessage(msg);
     }
 
     [MessageHandler((ushort)ServerToClientPacket.LoadLobby)]
@@ -64,7 +64,7 @@ public class PacketHandler : MonoBehaviour
             raw.Add(message.GetString());
         }
 
-        LobbyPlayerList playerList = FindObjectOfType<LobbyPlayerList>();
+        LobbyPlayerList playerList = FindAnyObjectByType<LobbyPlayerList>();
         if (playerList != null) playerList.UpdateList(raw);
     }
 
@@ -120,7 +120,7 @@ public class PacketHandler : MonoBehaviour
     [MessageHandler((ushort)ServerToClientPacket.PlayerResourceUpdate)]
     private static void UpdateResources(Message message)
     {
-        ResourceText res = FindObjectOfType<ResourceText>();
+        ResourceText res = FindAnyObjectByType<ResourceText>();
         if (res == null)
         {
             Debug.LogWarning("Can't get reference for ResourceText!");
@@ -170,7 +170,7 @@ public class PacketHandler : MonoBehaviour
             gui.color = currentPlayer.Color;
         }
 
-        foreach(Entity entity in FindObjectsOfType<Entity>())
+        foreach(Entity entity in FindObjectsByType<Entity>(FindObjectsSortMode.None))
         {
             if(entity.OwnerId == currentPlayer.ClientID)
             {
@@ -185,7 +185,7 @@ public class PacketHandler : MonoBehaviour
         BuildingType type = (BuildingType)Enum.Parse(typeof(BuildingType), message.GetString());
         int boughtAmount = message.GetInt();
 
-        BuildPanel panel = FindObjectOfType<BuildPanel>();
+        BuildPanel panel = FindAnyObjectByType<BuildPanel>();
         if (panel.BuildingBought.ContainsKey(type))
         {
             panel.BuildingBought[type] = boughtAmount;
@@ -199,7 +199,7 @@ public class PacketHandler : MonoBehaviour
     private static void FetchBuildingDataResponse(Message message)
     {
         AbstractBuilding building = message.GetBuilding();
-        FindObjectOfType<InfoWindow>().Load(building);
+        FindAnyObjectByType<InfoWindow>().Load(building);
     }
 
     [MessageHandler((ushort)ServerToClientPacket.RenderTerritory)]
@@ -242,7 +242,7 @@ public class PacketHandler : MonoBehaviour
         Vector3 pos = map.ToVector3(position);
         pos = new Vector3(pos.x + 0.5f, pos.y + 0.5f, -1.1f);
 
-        EntityDefinition definition = FindObjectOfType<DefinitionRegistry>().Find(type);
+        EntityDefinition definition = FindAnyObjectByType<DefinitionRegistry>().Find(type);
         GameObject go = Instantiate(definition.Prefab, pos, Quaternion.identity);
         Entity entity = go.GetComponent<Entity>();
         entity.Initialize(position, definition, id);
@@ -265,7 +265,7 @@ public class PacketHandler : MonoBehaviour
         Vector3Int to = message.GetVector3Int();
         int lastTurnWhenMoved = message.GetInt();
 
-        Entity entity = FindObjectsOfType<Entity>().First(x => x.Id == id);
+        Entity entity = FindObjectsByType<Entity>(FindObjectsSortMode.None).First(x => x.Id == id);
 
         Vector3 v3 = map.ToVector3(to);
         entity.gameObject.transform.position = new Vector3(v3.x + 0.5f, v3.y + 0.5f, -1.1f);
@@ -279,7 +279,7 @@ public class PacketHandler : MonoBehaviour
     {
         string text = message.GetString();
         bool forceOpen = message.GetBool();
-        ChatPanel chatPanel = FindObjectOfType<ChatPanel>();
+        ChatPanel chatPanel = FindAnyObjectByType<ChatPanel>();
         chatPanel.AddMessage(text);
 
         if (forceOpen)
@@ -293,7 +293,7 @@ public class PacketHandler : MonoBehaviour
     private static void DestroyEntity(Message message)
     {
         int id = message.GetInt();
-        Entity entity = FindObjectsOfType<Entity>().First(x => x.Id == id);
+        Entity entity = FindObjectsByType<Entity>(FindObjectsSortMode.None).First(x => x.Id == id);
         if(entity == null)
         {
             Debug.LogError("Can't find destroyable entity with this ID! Can be desync error?");
@@ -310,8 +310,8 @@ public class PacketHandler : MonoBehaviour
         int attackerId = message.GetInt();
         double remainedHealth = message.GetDouble();
 
-        Entity victim = FindObjectsOfType<Entity>().First(x => x.Id == victimId);
-        Entity attacker = FindObjectsOfType<Entity>().First(x => x.Id == attackerId);
+        Entity victim = FindObjectsByType<Entity>(FindObjectsSortMode.None).First(x => x.Id == victimId);
+        Entity attacker = FindObjectsByType<Entity>(FindObjectsSortMode.None).First(x => x.Id == attackerId);
 
         //TODO: Victim can be null here, because the server will automatically destroy it when died
         //so the client should know when the victim has less hp
