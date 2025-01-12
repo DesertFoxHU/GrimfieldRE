@@ -157,7 +157,7 @@ namespace ServerSide
         {
             ServerSender.InitChunkLoadingState(NetworkManager.Find(clientID), chunkManager.chunks.Count);
 
-            int delay = 20;
+            int delay = 10;
             foreach (var chunk in chunkManager.chunks)
             {
                 NetworkManager.Instance.Server.Send(chunk.AsPacket(

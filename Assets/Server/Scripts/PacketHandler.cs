@@ -49,7 +49,7 @@ namespace ServerSide
             new ServerPlayer(clientID, name, NetworkManager.Instance.Lobby.GetAnAvaibleColor());
 
             Message lobbyMsg = Message.Create(MessageSendMode.reliable, ServerToClientPacket.LoadLobby);
-            FindObjectOfType<NetworkManager>().Server.Send(lobbyMsg, clientID);
+            FindAnyObjectByType<NetworkManager>().Server.Send(lobbyMsg, clientID);
         }
 
         [MessageHandler((ushort)ClientToServerPacket.ChangeReadyStatus)]
@@ -222,7 +222,7 @@ namespace ServerSide
                 return;
             }
 
-            EntityDefinition definition = FindObjectOfType<DefinitionRegistry>().Find(type);
+            EntityDefinition definition = FindAnyObjectByType<DefinitionRegistry>().Find(type);
             if (!player.PayResources(definition.GetRecruitCost()))
             {
                 ServerSender.SendAlert(clientID, $"Don't have enough resources to recruit this unit!");
@@ -246,7 +246,7 @@ namespace ServerSide
             Vector3Int from = message.GetVector3Int();
             Vector3Int to = message.GetVector3Int();
 
-            Entity entity = FindObjectsOfType<Entity>().First(x => x.Id == entityId);
+            Entity entity = FindObjectsByType<Entity>(FindObjectsSortMode.None).First(x => x.Id == entityId);
             if(entity == null)
             {
                 ServerSender.SendAlert(clientID, "Didn't find any entity on that position. Can this be desync related error?");
@@ -318,8 +318,8 @@ namespace ServerSide
             int victimId = message.GetInt();
             int attackerId = message.GetInt();
 
-            Entity victim = FindObjectsOfType<Entity>().First(x => x.Id == victimId);
-            Entity attacker = FindObjectsOfType<Entity>().First(x => x.Id == attackerId);
+            Entity victim = FindObjectsByType<Entity>(FindObjectsSortMode.None).First(x => x.Id == victimId);
+            Entity attacker = FindObjectsByType<Entity>(FindObjectsSortMode.None).First(x => x.Id == attackerId);
 
             if (!attacker.GetTargetables().Contains(victim))
             {

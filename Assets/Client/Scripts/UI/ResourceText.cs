@@ -14,14 +14,14 @@ public class ResourceText : MonoBehaviour
 
     public List<ResourceWriteable> texts;
 
-    public void UpdateType(ResourceType type, double amount, double perTurn)
+    public void UpdateType(ResourceType type, double amount, double perTurn, double maxAmount)
     {
         foreach(ResourceWriteable text in texts)
         {
             if(text.type == type)
             {
                 string prefix = perTurn >= 0 ? "+" : "";
-                text.textField.text = $"{amount} ({prefix}{perTurn})";
+                text.textField.text = $"{amount}/{maxAmount} ({prefix}{perTurn})";
             }
         }
     }

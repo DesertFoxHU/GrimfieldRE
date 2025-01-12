@@ -11,6 +11,7 @@ public class ResourceHolder
 {
     public ResourceType type;
     public double Value = 0;
+    public double MaxValue = 0;
 
     public ResourceHolder()
     {
@@ -25,6 +26,11 @@ public class ResourceHolder
     {
         this.type = type;
         Value = value;
+    }
+
+    public ResourceHolder(ResourceType type, double value, double maxValue) : this(type, value)
+    {
+        MaxValue = maxValue;
     }
 }
 

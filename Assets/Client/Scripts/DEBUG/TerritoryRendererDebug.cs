@@ -23,7 +23,7 @@ public class TerritoryRendererDebug : MonoBehaviour
             Vector3Int pos = GameObject.FindGameObjectWithTag("GameMap").GetComponent<Tilemap>().ToVector3Int(worldPoint);
 
             List<Vector3Int> vectors = GameObject.FindGameObjectWithTag("GameMap").GetComponent<Tilemap>().GetTileRange(pos, range);
-            FindObjectOfType<TerritoryRenderer>().Render(vectors, color);
+            FindAnyObjectByType<TerritoryRenderer>().Render(vectors, color);
         }
     }
 }

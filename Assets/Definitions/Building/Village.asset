@@ -16,30 +16,39 @@ MonoBehaviour:
   spritesLevel:
   - {fileID: -90022706, guid: ccf179a8a4e844346bc3b59ed021482f, type: 3}
   - {fileID: -634119958, guid: ccf179a8a4e844346bc3b59ed021482f, type: 3}
-  placeable: 0000000006000000
+  placeable: 00000000
   description: The place where new citizens born
   ResourceCost: []
   IncreasePerBuy:
   - type: 0
     Value: 4
+    MaxValue: 0
   - type: 2
     Value: 6
+    MaxValue: 0
   - type: 3
     Value: 2
+    MaxValue: 0
   hasProductStorage: 1
   StorageCapacity:
   - type: 0
     Value: 6
+    MaxValue: 0
   - type: 1
     Value: 10
+    MaxValue: 0
   - type: 2
     Value: 10
+    MaxValue: 0
   - type: 3
     Value: 10
+    MaxValue: 0
   - type: 4
     Value: 10
+    MaxValue: 0
   - type: 5
     Value: 12
+    MaxValue: 0
   isProducer: 1
   produceType: 0
   ProduceLevel:

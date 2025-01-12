@@ -9,6 +9,5 @@ public enum TileType
     Forest,
     GoldOre,
     ShallowWater,
-    DragonNest,
-    Flag
+    DragonNest
 }

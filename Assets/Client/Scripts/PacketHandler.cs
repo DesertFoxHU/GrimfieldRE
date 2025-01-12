@@ -94,7 +94,6 @@ public class PacketHandler : MonoBehaviour
             int spriteIndex = int.Parse(split[3]);
 
             GrimfieldTile tile = map.GetOrInit(pos, DefinitionRegistry.Instance.Find(tileType));
-            Debug.Log($"SetTileIndx: {tile} {tile.definition} {spriteIndex}");
             tile.spriteIndex = spriteIndex;
         }
         map.RefreshAllTiles();
@@ -135,7 +134,8 @@ public class PacketHandler : MonoBehaviour
             ResourceType type = (ResourceType)System.Enum.Parse(typeof(ResourceType), message.GetString());
             double amount = message.GetDouble();
             double perTurn = message.GetDouble();
-            res.UpdateType(type, amount, perTurn);
+            double maxAmount = message.GetDouble();
+            res.UpdateType(type, amount, perTurn, maxAmount);
             PlayerInfo.UpdateResource(type, amount);
         }
     }
@@ -334,5 +334,12 @@ public class PacketHandler : MonoBehaviour
 
         GameObject building = GameObject.FindGameObjectsWithTag("Building").ToList().Find(x => x.name.Split('_')[2] == guid.ToString());
         Destroy(building);
+    }
+
+    [MessageHandler((ushort)ServerToClientPacket.InitChunkLoadingState)]
+    private static void InitChunkLoadingState(Message message)
+    {
+        int chunkCount = message.GetInt();
+        Debug.Log($"Started loading {chunkCount} chunks");
     }
 }

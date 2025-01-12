@@ -3575,6 +3575,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: f7c57da80f80f724fbb58a8416cc6728, type: 3}
   - {fileID: 21300000, guid: 464fb1a8d2361b940baaf322e4369a99, type: 3}
   - {fileID: 21300000, guid: 2546fe0ff6357984592807c1fb193945, type: 3}
+  boundaryMaterial: {fileID: 2100000, guid: 974bfa62ce72e4844b6ba825a834daae, type: 2}
 --- !u!1 &1948272969
 GameObject:
   m_ObjectHideFlags: 0

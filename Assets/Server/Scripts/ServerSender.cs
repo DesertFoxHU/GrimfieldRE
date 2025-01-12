@@ -39,7 +39,7 @@ namespace ServerSide
             Message message = Message.Create(MessageSendMode.unreliable, ServerToClientPacket.PlayerResourceUpdate);
             message.Add(summerized.Count);
             foreach (ResourceHolder holder in summerized)
-                message.Add(holder.type.ToString()).Add(holder.Value).Add(perTurn.ContainsKey(holder.type) ? perTurn[holder.type] : 0);
+                message.Add(holder.type.ToString()).Add(holder.Value).Add(perTurn.ContainsKey(holder.type) ? perTurn[holder.type] : 0).Add(holder.MaxValue);
 
             NetworkManager.Instance.Server.Send(message, player.PlayerId);
         }

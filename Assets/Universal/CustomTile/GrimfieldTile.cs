@@ -13,7 +13,7 @@ public class GrimfieldTile : Tile
     {
         get => definition.type;
     }
-    public int spriteIndex;
+    public int spriteIndex = 0;
 
     public void Init(TileDefinition definition)
     {
@@ -23,13 +23,21 @@ public class GrimfieldTile : Tile
     public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
     {
         base.GetTileData(position, tilemap, ref tileData);
+        if (!Application.isPlaying)
+        {
+            return;
+        }
         try
         {
-            tileData.sprite = definition.sprites[spriteIndex];
+            if (Application.isPlaying)
+            {
+                tileData.sprite = definition.sprites[spriteIndex];
+            }
+            else tileData.sprite = definition.sprites[0];
         }
         catch (IndexOutOfRangeException)
         {
-            Debug.LogError($"Index was out of bounds, for: {definition} {position} index: {spriteIndex}");
+            //Debug.LogError($"Index was out of bounds, for: {definition} {position} index: {spriteIndex}");
         }
 
         if(definition.tilings.Count != 0)

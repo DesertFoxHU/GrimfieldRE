@@ -6,6 +6,8 @@ TagManager:
   tags:
   - TurnInfo
   - GameMap
+  - TextMesh
+  - Building
   layers:
   - Default
   - TransparentFX

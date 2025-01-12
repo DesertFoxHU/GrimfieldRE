@@ -39,6 +39,7 @@ namespace ServerSide
                     {
                         ResourceHolder holder = resources.GetOrCreate(res.Type);
                         holder.Value += res.Amount;
+                        holder.MaxValue += res.MaxAmountAtLevel[building.Level];
                     }
                 }
             }
