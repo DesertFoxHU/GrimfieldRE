@@ -27,18 +27,18 @@ public class JoinServer : MonoBehaviour
     {
         if (ipAddressField.text == "" || ipAddressField.text == null)
         {
-            FindObjectOfType<MessageDisplayer>().SetMessage("IpAddress field cannot be empty");
+            FindAnyObjectByType<MessageDisplayer>().SetMessage("IpAddress field cannot be empty");
             return;
         }
         if (nameField.text == "" || nameField.text == null)
         {
-            FindObjectOfType<MessageDisplayer>().SetMessage("Name field cannot be empty");
+            FindAnyObjectByType<MessageDisplayer>().SetMessage("Name field cannot be empty");
             return;
         }
 
         if(nameField.text.Length > 16)
         {
-            FindObjectOfType<MessageDisplayer>().SetMessage("Name cannot be longer than 16 characters!");
+            FindAnyObjectByType<MessageDisplayer>().SetMessage("Name cannot be longer than 16 characters!");
             return;
         }
 
@@ -59,6 +59,6 @@ public class JoinServer : MonoBehaviour
         PlayerPrefs.SetString("Name", NetworkManager.Instance.Name);
         PlayerPrefs.Save();
 
-        FindObjectOfType<NetworkManager>().Connect();
+        FindAnyObjectByType<NetworkManager>().Connect();
     }
 }

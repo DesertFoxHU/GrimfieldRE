@@ -45,7 +45,7 @@ namespace ServerSide
         public static int GetNextEntityId()
         {
             int Id = 0;
-            foreach(Entity entity in UnityEngine.Object.FindObjectsOfType<Entity>())
+            foreach(Entity entity in UnityEngine.Object.FindObjectsByType<Entity>(FindObjectsSortMode.None))
             {
                 if(entity.Id == Id)
                 {

@@ -23,7 +23,7 @@ namespace InfoPanel
                 AbstractBuilding building = (AbstractBuilding) obj;
 
                 //These are just prefabs
-                List<ContentSegment> prefabs = FindObjectOfType<ContentSegmentHolder>().GetPrefabs(building);
+                List<ContentSegment> prefabs = FindAnyObjectByType<ContentSegmentHolder>().GetPrefabs(building);
                 prefabs = prefabs.OrderBy(x => x.order).ToList();
 
                 foreach(ContentSegment segment in prefabs)
@@ -55,7 +55,7 @@ namespace InfoPanel
             {
                 Entity entity = (Entity)obj;
 
-                List<ContentSegment> prefabs = FindObjectOfType<ContentSegmentHolder>().GetPrefabs(entity);
+                List<ContentSegment> prefabs = FindAnyObjectByType<ContentSegmentHolder>().GetPrefabs(entity);
                 prefabs = prefabs.OrderBy(x => x.order).ToList();
 
                 foreach (ContentSegment segment in prefabs)

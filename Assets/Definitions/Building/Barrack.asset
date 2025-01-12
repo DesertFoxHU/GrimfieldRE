@@ -16,23 +16,37 @@ MonoBehaviour:
   spritesLevel:
   - {fileID: 21300000, guid: 6c8d400381c097840bfc46c2bf54682a, type: 3}
   placeable: 00000000
-  description: You can recruit units here. Requires coin to recruit units
+  description: Requit units here, requires gold
   ResourceCost:
   - type: 0
     Value: 3
+    MaxValue: 0
   - type: 2
     Value: 6
+    MaxValue: 0
   - type: 3
     Value: 4
+    MaxValue: 0
   IncreasePerBuy:
   - type: 0
     Value: 3
+    MaxValue: 0
   - type: 2
     Value: 10
+    MaxValue: 0
   - type: 3
     Value: 3
+    MaxValue: 0
   - type: 4
     Value: 2
+    MaxValue: 0
+  Upkeep:
+  - type: 4
+    Value: 1
+    MaxValue: 0
+  - type: 1
+    Value: 3
+    MaxValue: 0
   hasProductStorage: 0
   StorageCapacity: []
   isProducer: 0

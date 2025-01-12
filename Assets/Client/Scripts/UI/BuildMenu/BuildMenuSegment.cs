@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using static UnityEditor.PlayerSettings;
 
 /// <summary>
 /// Like a BuildMenuElement but it's attached to one of them to make logic
@@ -15,6 +16,7 @@ public class BuildMenuSegment : MonoBehaviour
     public TextMeshProUGUI Description;
     public GameObject CostHolder;
     public GameObject CostPrefab;
+    public GameObject UpkeepHolder;
 
     public BuildMenuElement LastLoaded { get; private set; }
     public BuildingType Type
@@ -29,6 +31,7 @@ public class BuildMenuSegment : MonoBehaviour
         Description.text = DefinitionRegistry.Instance.Find(element.BuildingType).description;
         Icon.sprite = DefinitionRegistry.Instance.Find(element.BuildingType).GetSpriteByLevel(1);
         RenderCost(element, 0);
+        RenderUpkeep(element);
     }
 
     public void UpdateCostColor()
@@ -66,27 +69,54 @@ public class BuildMenuSegment : MonoBehaviour
         Dictionary<ResourceType, double> cost = definition.GetBuildingCost(boughtCount);
 
         cost.RemoveAll(val => val <= 0);
-        int count = 1;
+        int count = 0;
         foreach (ResourceType type in cost.Keys)
         {
-            Vector3 pos = new Vector3(0, 0, 0);
-            if (count % 2 == 0) pos.y = -12;
-            else pos.y = 12;
-
-            pos.x = 120 * ((int) ((count-1)/2));
+            Vector3 pos = new Vector3(3, 24, 0);
+            pos.y = pos.y - (23 * count);
+            if(count >= 3)
+            {
+                pos.y = 24 - (23 * (count - 3));
+                pos.x = 103.2f;
+            }
 
             GameObject costObject = Instantiate(CostPrefab, pos, Quaternion.identity);
             costObject.transform.SetParent(CostHolder.transform, false);
             costObject.name = type.ToString();
-            costObject.GetComponent<Image>().sprite = FindObjectOfType<ResourceIconRegistry>().Find(type);
+            costObject.GetComponent<Image>().sprite = FindAnyObjectByType<ResourceIconRegistry>().Find(type);
             costObject.GetComponentInChildren<TextMeshProUGUI>().text = "" + cost[type];
 
             count++;
         }
     }
 
+    public void RenderUpkeep(BuildMenuElement element)
+    {
+        BuildingDefinition definition = DefinitionRegistry.Instance.Find(element.BuildingType);
+        foreach (Transform children in UpkeepHolder.transform) Destroy(children.gameObject);
+
+        int count = 0;
+        foreach(ResourceHolder holder in definition.Upkeep)
+        {
+            Vector3 pos = new(3, 24, 0);
+            pos.y = pos.y - (23 * count);
+            if (count >= 3)
+            {
+                pos.y = 24 - (23 * (count-3));
+                pos.x = 103.2f;
+            }
+
+            GameObject costObject = Instantiate(CostPrefab, pos, Quaternion.identity);
+            costObject.transform.SetParent(UpkeepHolder.transform, false);
+            costObject.name = holder.type.ToString();
+            costObject.GetComponent<Image>().sprite = FindAnyObjectByType<ResourceIconRegistry>().Find(holder.type);
+            costObject.GetComponentInChildren<TextMeshProUGUI>().text = "" + holder.Value;
+            count++;
+        }
+    }
+
     public void StartBlueprintMode()
     {
-        FindObjectOfType<Blueprinting>().ChangeBlueprint(DefinitionRegistry.Instance.Find(LastLoaded.BuildingType));
+        FindAnyObjectByType<Blueprinting>().ChangeBlueprint(DefinitionRegistry.Instance.Find(LastLoaded.BuildingType));
     }
 }

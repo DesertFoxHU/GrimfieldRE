@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace ServerSide
@@ -52,6 +53,17 @@ namespace ServerSide
                 foreach(AbstractBuilding building in player.Buildings)
                 {
                     building.OnTurnCycleEnded();
+                    if(building.GetDefinition() != null)
+                    {
+                        if(building.GetDefinition().Upkeep != null || building.GetDefinition().Upkeep.Count > 0)
+                        {
+                            BuildingDefinition buildDef = building.GetDefinition();
+                            if (!player.PayResources(buildDef.Upkeep.ToDictionary(x => x.type, x => x.Value)))
+                            {
+                                
+                            }
+                        }
+                    }
                 }
 
                 foreach(Entity entity in player.entities)

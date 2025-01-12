@@ -63,7 +63,7 @@ public class ResourceCostDisplayer : MonoBehaviour
             GameObject costObject = Instantiate(prefab, pos, Quaternion.identity);
             costObject.transform.SetParent(this.transform, false);
             costObject.name = type.ToString();
-            costObject.GetComponent<Image>().sprite = FindObjectOfType<ResourceIconRegistry>().Find(type);
+            costObject.GetComponent<Image>().sprite = FindAnyObjectByType<ResourceIconRegistry>().Find(type);
             costObject.GetComponentInChildren<TextMeshProUGUI>().text = "" + resources[type];
 
             initializedPrefab.Add(costObject);

@@ -49,7 +49,7 @@ public class Credits : MonoBehaviour
             return;
         }
 
-        FindObjectOfType<CameraRandom>().isTowardsRight = true;
+        FindAnyObjectByType<CameraRandom>().isTowardsRight = true;
         ActualObject.transform.position = Vector3.Lerp(
                 ActualObject.transform.position,
                 new Vector3(ActualObject.transform.position.x - 1f, ActualObject.transform.position.y, ActualObject.transform.position.z),

@@ -22,6 +22,6 @@ public class WikiHyperLink : MonoBehaviour, IPointerClickHandler
         int index;
         int.TryParse(linkId, out index);
         string id = Ids[index];
-        FindObjectOfType<WikiCanvas>().LoadById(id);
+        FindAnyObjectByType<WikiCanvas>().LoadById(id);
 	}
 }

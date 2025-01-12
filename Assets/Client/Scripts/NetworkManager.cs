@@ -66,7 +66,7 @@ public class NetworkManager : MonoBehaviour
 
     private void FailedConnect(object sender, EventArgs e)
     {
-        FindObjectOfType<MessageDisplayer>().SetMessage("Connection Failed");
+        FindAnyObjectByType<MessageDisplayer>().SetMessage("Connection Failed");
     }
 
     private void FixedUpdate()

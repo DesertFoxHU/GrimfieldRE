@@ -77,7 +77,7 @@ public class RecruitPanel : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        ResourceIconRegistry iconReg = FindObjectOfType<ResourceIconRegistry>();
+        ResourceIconRegistry iconReg = FindAnyObjectByType<ResourceIconRegistry>();
         int index = 0;
         foreach (ResourceHolder resource in definition.RecruitCost)
         {

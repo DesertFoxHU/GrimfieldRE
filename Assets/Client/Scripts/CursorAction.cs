@@ -36,7 +36,7 @@ public class CursorAction : MonoBehaviour
 
         if (!map.HasTile(pos)) return;
 
-        foreach(Entity entity in GameObject.FindObjectsOfType<Entity>())
+        foreach(Entity entity in GameObject.FindObjectsByType<Entity>(FindObjectsSortMode.None))
         {
             if(entity.Position.x == pos.x && entity.Position.y == pos.y)
             {
@@ -45,13 +45,13 @@ public class CursorAction : MonoBehaviour
                 {
                     if (!selectedEntity.GetTargetables().Contains(entity))
                     {
-                        FindObjectOfType<MessageDisplayer>().SetMessage("You can't reach this unit!");
+                        FindAnyObjectByType<MessageDisplayer>().SetMessage("You can't reach this unit!");
                         return;
                     }
 
                     if (!selectedEntity.canMove)
                     {
-                        FindObjectOfType<MessageDisplayer>().SetMessage("This unit has already moved/attacked in this turn!");
+                        FindAnyObjectByType<MessageDisplayer>().SetMessage("This unit has already moved/attacked in this turn!");
                         return;
                     }
 
@@ -70,11 +70,11 @@ public class CursorAction : MonoBehaviour
                     selectedEntity = entity;
                     selectedEntityMarker.SetActive(true);
                     selectedEntityMarker.transform.localPosition = worldPos;
-                    FindObjectOfType<InfoWindow>().Load(entity);
+                    FindAnyObjectByType<InfoWindow>().Load(entity);
                     return;
                 }
                 
-                FindObjectOfType<InfoWindow>().Load(entity);
+                FindAnyObjectByType<InfoWindow>().Load(entity);
                 return;
             }
         }
@@ -115,6 +115,6 @@ public class CursorAction : MonoBehaviour
             }
         }
 
-        FindObjectOfType<InfoWindow>().Load(pos);
+        FindAnyObjectByType<InfoWindow>().Load(pos);
     }
 }

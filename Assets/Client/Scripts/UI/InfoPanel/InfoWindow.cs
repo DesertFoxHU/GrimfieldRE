@@ -58,7 +58,7 @@ namespace InfoPanel
         {
             if(LastObject is AbstractBuilding building)
             {
-                FindObjectOfType<RecruitPanel>().LoadPanel(building.Position, building.GetDefinition());
+                FindAnyObjectByType<RecruitPanel>().LoadPanel(building.Position, building.GetDefinition());
             }
         }
 

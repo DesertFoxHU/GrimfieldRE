@@ -29,6 +29,10 @@ MonoBehaviour:
   - type: 3
     Value: 2
     MaxValue: 0
+  Upkeep:
+  - type: 1
+    Value: 1
+    MaxValue: 0
   hasProductStorage: 1
   StorageCapacity:
   - type: 0

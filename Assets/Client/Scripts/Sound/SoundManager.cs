@@ -18,7 +18,6 @@ public class SoundManager : MonoBehaviour
         source = GetComponent<AudioSource>();
         foreach(SoundSerialize sound in registerSounds)
         {
-            Debug.Log($"{sound}");
             sounds.Add(sound.sound.ToString(), sound.clip);
         }
     }

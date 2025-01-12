@@ -20,6 +20,6 @@ public class RecruitEntityElement : MonoBehaviour
 
     public void ForceLoadEntityDetail()
     {
-        FindObjectOfType<RecruitPanel>().LoadDetailedEntityPanel(LastLoaded);
+        FindAnyObjectByType<RecruitPanel>().LoadDetailedEntityPanel(LastLoaded);
     }
 }

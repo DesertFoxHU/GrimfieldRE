@@ -12,6 +12,7 @@ public class BuildingDefinition : ScriptableObject
 
     public List<ResourceHolder> ResourceCost;
     public List<ResourceHolder> IncreasePerBuy;
+    public List<ResourceHolder> Upkeep;
 
     #region Storage
     public bool hasProductStorage;
@@ -46,7 +47,7 @@ public class BuildingDefinition : ScriptableObject
     {
         List<EntityDefinition> list = new List<EntityDefinition>();
         foreach(EntityType type in canRecruit)
-            list.Add(FindObjectOfType<DefinitionRegistry>().Find(type));
+            list.Add(FindAnyObjectByType<DefinitionRegistry>().Find(type));
         return list;
     }
 

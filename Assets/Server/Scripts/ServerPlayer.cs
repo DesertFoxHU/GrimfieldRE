@@ -95,7 +95,7 @@ namespace ServerSide
 
         public Dictionary<ResourceType, double> GetResourceGeneratePerTurn()
         {
-            Dictionary<ResourceType, double> generate = new Dictionary<ResourceType, double>();
+            Dictionary<ResourceType, double> generate = new();
             foreach (AbstractBuilding building in Buildings)
             {
                 BuildingDefinition definition = building.GetDefinition();
@@ -109,6 +109,21 @@ namespace ServerSide
                     else
                     {
                         generate.Add(type, definition.ProduceLevel.Find(x => x.level == building.Level).value);
+                    }
+                }
+
+                if(definition.Upkeep != null || definition.Upkeep.Count != 0)
+                {
+                    foreach(ResourceHolder holder in definition.Upkeep)
+                    {
+                        if (generate.ContainsKey(holder.type))
+                        {
+                            generate[holder.type] -= holder.Value;
+                        }
+                        else
+                        {
+                            generate.Add(holder.type, -holder.Value);
+                        }
                     }
                 }
             }

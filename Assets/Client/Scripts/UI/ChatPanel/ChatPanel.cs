@@ -49,7 +49,7 @@ public class ChatPanel : MonoBehaviour
         if (text.EndsWith("\n"))
         {
             string message = text.Remove(text.Length - 1);
-            FindObjectOfType<NetworkManager>().SendMessageToServer(message);
+            FindAnyObjectByType<NetworkManager>().SendMessageToServer(message);
             inputField.text = "";
         }
     }

@@ -48,9 +48,9 @@ public class Entity : MonoBehaviour
     [ContextMenu("Initialize (DEBUG)")]
     private void InitializeDebug()
     {
-        Tilemap map = FindObjectOfType<Tilemap>();
+        Tilemap map = FindAnyObjectByType<Tilemap>();
         Vector3Int position = map.ToVector3Int(this.transform.position);
-        EntityDefinition definition = FindObjectOfType<DefinitionRegistry>().Find(initType);
+        EntityDefinition definition = FindAnyObjectByType<DefinitionRegistry>().Find(initType);
         Initialize(position, definition, 0);
     }
 
@@ -82,7 +82,7 @@ public class Entity : MonoBehaviour
 
     public List<Entity> GetTargetables()
     {
-        List<Entity> entities = FindObjectsOfType<Entity>().ToList();
+        List<Entity> entities = FindObjectsByType<Entity>(FindObjectsSortMode.None).ToList();
         entities.RemoveAll(x => x.Id == this.Id || x.OwnerId == this.OwnerId);
 
         List<Entity> final = new List<Entity>();
@@ -256,14 +256,14 @@ public class Entity : MonoBehaviour
     {
         if (!canMove)
         {
-            FindObjectOfType<MessageDisplayer>().SetMessage($"This unit has been already moved.");
+            FindAnyObjectByType<MessageDisplayer>().SetMessage($"This unit has been already moved.");
             return;
         }
 
         CalculateMovementRange();
         if (!lastCanMove.Contains(to))
         {
-            FindObjectOfType<MessageDisplayer>().SetMessage($"This unit can't move there.");
+            FindAnyObjectByType<MessageDisplayer>().SetMessage($"This unit can't move there.");
             return;
         }
 
