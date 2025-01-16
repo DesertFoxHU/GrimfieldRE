@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
-using static UnityEditor.PlayerSettings;
 
 /// <summary>
 /// Like a BuildMenuElement but it's attached to one of them to make logic
@@ -24,13 +22,13 @@ public class BuildMenuSegment : MonoBehaviour
         get => LastLoaded.BuildingType;
     }
 
-    public void Load(BuildMenuElement element)
+    public void Load(BuildMenuElement element, int boughtCount)
     {
         LastLoaded = element;
         Title.text = LastLoaded.Title;
         Description.text = DefinitionRegistry.Instance.Find(element.BuildingType).description;
         Icon.sprite = DefinitionRegistry.Instance.Find(element.BuildingType).GetSpriteByLevel(1);
-        RenderCost(element, 0);
+        RenderCost(element, boughtCount);
         RenderUpkeep(element);
     }
 

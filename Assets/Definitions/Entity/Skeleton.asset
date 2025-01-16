@@ -28,11 +28,14 @@ MonoBehaviour:
   RecruitCost:
   - type: 0
     Value: 1
+    MaxValue: 0
   - type: 5
-    Value: 17
+    Value: 12
+    MaxValue: 0
   Upkeep:
   - type: 5
-    Value: 1
+    Value: 0.25
+    MaxValue: 0
   MovementCost:
   - Value1: 0
     Value2: 1

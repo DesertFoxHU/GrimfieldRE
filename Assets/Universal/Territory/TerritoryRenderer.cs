@@ -44,11 +44,11 @@ namespace Universal
 
             foreach (Territory territory in territories)
             {
-                Render(territory.GetAll(), territory.GetColor());
+                Render(territory, territory.GetAll(), territory.GetColor());
             }
         }
 
-        public void Render(List<Vector3Int> lands, Color color)
+        public void Render(Territory territory, List<Vector3Int> lands, Color color)
         {
             foreach (Vector3Int land in lands)
             {
@@ -56,22 +56,22 @@ namespace Universal
 
                 Sides drawSides = Sides.None;
 
-                if (!lands.Contains(new Vector3Int(land.x - 1, land.y))) //Empty left
+                if (!territory.GetAll().Contains(new Vector3Int(land.x - 1, land.y))) //Empty left
                 {
                     drawSides |= Sides.Left;
                 }
 
-                if (!lands.Contains(new Vector3Int(land.x + 1, land.y))) //Empty right
+                if (!territory.GetAll().Contains(new Vector3Int(land.x + 1, land.y))) //Empty right
                 {
                     drawSides |= Sides.Right;
                 }
 
-                if (!lands.Contains(new Vector3Int(land.x, land.y + 1))) //Empty upper
+                if (!territory.GetAll().Contains(new Vector3Int(land.x, land.y + 1))) //Empty upper
                 {
                     drawSides |= Sides.Top;
                 }
 
-                if (!lands.Contains(new Vector3Int(land.x, land.y - 1))) //Empty bottom
+                if (!territory.GetAll().Contains(new Vector3Int(land.x, land.y - 1))) //Empty bottom
                 {
                     drawSides |= Sides.Bottom;
                 }

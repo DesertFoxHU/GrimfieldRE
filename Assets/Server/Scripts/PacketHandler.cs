@@ -141,9 +141,10 @@ namespace ServerSide
             Dictionary<ResourceType, double> cost = buildingDefinition.GetBuildingCost(player.BuildingBought.ContainsKey(type) ? player.BuildingBought[type] : 0);
             List<ResourceHolder> resources = player.GetAvaibleResources();
 
-            if (cost.Count != 0 && !player.PayResources(cost))
+            if (cost.Count != 0 && !player.PayResources(cost, false))
             {
                 ServerSender.SendAlert(clientID, "You don't have enough resources!");
+                ServerSender.UpdateResourceCost(player, type);
                 return;
             }
 
@@ -223,7 +224,7 @@ namespace ServerSide
             }
 
             EntityDefinition definition = FindAnyObjectByType<DefinitionRegistry>().Find(type);
-            if (!player.PayResources(definition.GetRecruitCost()))
+            if (!player.PayResources(definition.GetRecruitCost(), false))
             {
                 ServerSender.SendAlert(clientID, $"Don't have enough resources to recruit this unit!");
                 return;

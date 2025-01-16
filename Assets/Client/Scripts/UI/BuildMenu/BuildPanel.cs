@@ -27,11 +27,11 @@ public class BuildPanel : MonoBehaviour
     public GameObject upwardButton;
     public GameObject downwardButton;
 
-    [HideInInspector] public List<BuildMenuSegment> segments = new List<BuildMenuSegment>(); //Segments which are active in scene
-    [HideInInspector] public Dictionary<BuildingType, int> BuildingBought = new Dictionary<BuildingType, int>();
+    [HideInInspector] public List<BuildMenuSegment> segments = new(); //Segments which are active in scene
+    [HideInInspector] public Dictionary<BuildingType, int> BuildingBought = new();
 
-    [HideInInspector] public Dictionary<Category, int> pages = new Dictionary<Category, int>();
-    [HideInInspector] public Dictionary<Category, List<BuildMenuElement>> processedSegments = new Dictionary<Category, List<BuildMenuElement>>();
+    [HideInInspector] public Dictionary<Category, int> pages = new();
+    [HideInInspector] public Dictionary<Category, List<BuildMenuElement>> processedSegments = new();
 
     public void Start()
     {
@@ -114,7 +114,7 @@ public class BuildPanel : MonoBehaviour
 
             GameObject newSegment = Instantiate(segmentPrefab, new Vector3(0f, Y, 0f), Quaternion.identity);
             newSegment.transform.SetParent(GetCategorysObject(element.Category).transform, false);
-            newSegment.GetComponent<BuildMenuSegment>().Load(element);
+            newSegment.GetComponent<BuildMenuSegment>().Load(element, BuildingBought.GetValueOrDefault(element.BuildingType, 0));
             segments.Add(newSegment.GetComponent<BuildMenuSegment>());
 
             count++;

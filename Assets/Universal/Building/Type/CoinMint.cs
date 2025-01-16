@@ -28,14 +28,6 @@ public class CoinMint : AbstractBuilding, IDisable
     {
         if (!IsActive()) return;
 
-        ExchangeRate from = GetDefinition().ExchangeFrom.Find(x => x.level == Level);
-        ExchangeRate to = GetDefinition().ExchangeTo.Find(x => x.level == Level);
-
-        if (!owner.CouldStoreResource(to.type, to.amount)) return;
-
-        //In the end they couldn't pay
-        if (!owner.PayResources(KeyValuePair.Create(from.type, from.amount))) return;
-
-        owner.TryStoreResource(to.type, to.amount);
+        owner.TryStoreResource(GetDefinition().produceType, GetDefinition().ProduceLevel.Find(x => x.level == Level).value);
     }
 }

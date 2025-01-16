@@ -45,11 +45,14 @@ namespace ServerSide
         public static int GetNextEntityId()
         {
             int Id = 0;
-            foreach(Entity entity in UnityEngine.Object.FindObjectsByType<Entity>(FindObjectsSortMode.None))
+            foreach(ServerPlayer player in NetworkManager.players)
             {
-                if(entity.Id == Id)
+                foreach (Entity entity in player.entities)
                 {
-                    Id++;
+                    if (entity.Id == Id)
+                    {
+                        Id++;
+                    }
                 }
             }
 

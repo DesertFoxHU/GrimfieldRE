@@ -58,7 +58,7 @@ namespace ServerSide
                         if(building.GetDefinition().Upkeep != null || building.GetDefinition().Upkeep.Count > 0)
                         {
                             BuildingDefinition buildDef = building.GetDefinition();
-                            if (!player.PayResources(buildDef.Upkeep.ToDictionary(x => x.type, x => x.Value)))
+                            if (!player.PayResources(buildDef.Upkeep.ToDictionary(x => x.type, x => x.Value), true))
                             {
                                 
                             }
@@ -68,7 +68,7 @@ namespace ServerSide
 
                 foreach(Entity entity in player.entities)
                 {
-                    if (!player.PayResources(entity.Definition.GetUpkeep()))
+                    if (!player.PayResources(entity.Definition.GetUpkeep(), false))
                     {
                         entity.OnUpkeepFailedToPay();
                     }

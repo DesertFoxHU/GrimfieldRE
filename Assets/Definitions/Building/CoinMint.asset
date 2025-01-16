@@ -42,16 +42,15 @@ MonoBehaviour:
     MaxValue: 0
   Upkeep:
   - type: 4
-    Value: 3
-    MaxValue: 0
-  - type: 2
-    Value: 0.5
+    Value: 2
     MaxValue: 0
   hasProductStorage: 0
   StorageCapacity: []
-  isProducer: 0
-  produceType: 0
-  ProduceLevel: []
+  isProducer: 1
+  produceType: 5
+  ProduceLevel:
+  - level: 1
+    value: 1
   canClaimTerritory: 0
   territoryClaimRange: 0
   isExchanger: 0

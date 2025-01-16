@@ -20,11 +20,15 @@ MonoBehaviour:
   ResourceCost:
   - type: 0
     Value: 1
+    MaxValue: 0
   IncreasePerBuy:
   - type: 0
     Value: 1
+    MaxValue: 0
   - type: 2
-    Value: 2
+    Value: 1
+    MaxValue: 0
+  Upkeep: []
   hasProductStorage: 0
   StorageCapacity: []
   isProducer: 1

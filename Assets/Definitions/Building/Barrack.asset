@@ -32,7 +32,7 @@ MonoBehaviour:
     Value: 3
     MaxValue: 0
   - type: 2
-    Value: 10
+    Value: 8
     MaxValue: 0
   - type: 3
     Value: 3
@@ -42,7 +42,7 @@ MonoBehaviour:
     MaxValue: 0
   Upkeep:
   - type: 4
-    Value: 1
+    Value: 0.5
     MaxValue: 0
   - type: 1
     Value: 3

@@ -165,17 +165,21 @@ namespace ServerSide
         /// This always check if the player has enough resource to pay it
         /// </summary>
         /// <param name="cost"></param>
+        /// <param name="force">Pay the resource even when there aren't enough</param>
         /// <returns>False if couldn't pay</returns>
-        public bool PayResources(Dictionary<ResourceType, double> cost)
+        public bool PayResources(Dictionary<ResourceType, double> cost, bool force)
         {
             #region Has enough 
-            List<ResourceHolder> resources = GetAvaibleResources();
-            foreach (ResourceType resType in cost.Keys)
+            if (!force)
             {
-                ResourceHolder holder = resources.Get(resType);
-                if (holder == null || holder.Value < cost[resType])
+                List<ResourceHolder> resources = GetAvaibleResources();
+                foreach (ResourceType resType in cost.Keys)
                 {
-                    return false;
+                    ResourceHolder holder = resources.Get(resType);
+                    if (holder == null || holder.Value < cost[resType])
+                    {
+                        return false;
+                    }
                 }
             }
             #endregion
@@ -216,9 +220,9 @@ namespace ServerSide
             return true;
         }
 
-        public bool PayResources(params KeyValuePair<ResourceType, double>[] amount)
+        public bool PayResources(bool force, params KeyValuePair<ResourceType, double>[] amount)
         {
-            return PayResources(amount.ToDictionary(x => x.Key, x => x.Value));
+            return PayResources(amount.ToDictionary(x => x.Key, x => x.Value), force);
         }
     }
 }
