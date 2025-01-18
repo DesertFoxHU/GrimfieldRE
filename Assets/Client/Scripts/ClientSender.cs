@@ -1,4 +1,5 @@
-﻿using Riptide;
+﻿using ClientSide;
+using Riptide;
 using System;
 using System.Collections.Generic;
 using System.Linq;

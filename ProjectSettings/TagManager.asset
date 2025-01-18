@@ -8,6 +8,7 @@ TagManager:
   - GameMap
   - TextMesh
   - Building
+  - TerritoryMap
   layers:
   - Default
   - TransparentFX

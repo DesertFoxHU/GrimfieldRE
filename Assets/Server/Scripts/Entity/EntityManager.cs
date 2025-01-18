@@ -16,11 +16,11 @@ namespace ServerSide
             entity.lastTurnWhenMoved = GameController.Instance.turnHandler.turnCycleCount;
 
             AbstractBuilding building = NetworkManager.GetAllBuilding().Find(x => x.Position.x == newPosition.x && x.Position.y == newPosition.y);
-            if(building != null && building.owner.PlayerId != player.PlayerId)
+            if(building != null && building.OwnerId != player.PlayerId)
             {
                 entity.claiming = building;
                 entity.canClaimBuilding = false;
-                ServerSender.SendChatMessage(building.owner.PlayerId, "Your building is under attack: " + building.GetDefinition().name, true);
+                ServerSender.SendChatMessage(building.Owner.PlayerId, "Your building is under attack: " + building.GetDefinition().name, true);
             }
             else
             {

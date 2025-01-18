@@ -16,13 +16,13 @@ public enum ServerToClientPacket : ushort
     TurnChange,
     UpdateBuildingCost,
     FetchBuildingDataResponse,
-    RenderTerritory,
     SpawnEntity,
     MoveEntity,
     SendMessage,
     DestroyEntity,
     RenderAttackEntity,
     DestroyBuilding,
+    UpdateTerritory
 }
 
 public enum ClientToServerPacket : ushort

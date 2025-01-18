@@ -148,13 +148,25 @@ namespace ServerSide
                 return;
             }
 
-            AbstractBuilding building = (AbstractBuilding) Activator.CreateInstance(AbstractBuilding.GetClass(type), player, pos);
+            AbstractBuilding building = (AbstractBuilding) Activator.CreateInstance(AbstractBuilding.GetClass(type), player.PlayerId, pos);
 
             player.Buildings.Add(building);
             player.IncrementBuildingBought(type);
             ServerSender.SendNewBuilding(player, building);
 
-            FindAnyObjectByType<ServerSide.TerritoryRenderer>().TryAddNew(map, player, building);
+            Debug.Log("Claiming land it has claimed: " + building.ClaimedLand.Count);
+            Territory.Claim(player.PlayerId, building, building.ClaimedLand);
+            FindAnyObjectByType<TerritoryRenderer>().RenderAll();
+
+            GameObject go = new GameObject();
+            go.name = "Building_" + clientID + "_" + building.ID.ToString();
+            go.transform.position = new Vector3(pos.x + .5f, pos.y + .5f, -1f);
+            go.transform.SetParent(map.transform);
+            go.tag = "Building";
+            SpriteRenderer render = go.AddComponent<SpriteRenderer>();
+            ServerSender.UpdateTerritory(building);
+
+            render.sprite = DefinitionRegistry.Instance.Find(type).GetSpriteByLevel(building.Level);
 
             Debug.Log($"Added new building with GUID: {building.ID}");
         }

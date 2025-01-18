@@ -8,7 +8,7 @@ public class CoinMint : AbstractBuilding, IDisable
 {
     private bool active = true;
 
-    public CoinMint(ServerPlayer owner, Vector3Int position) : base(owner, position) 
+    public CoinMint(ushort owner, Vector3Int position) : base(owner, position) 
     {
     }
 
@@ -28,6 +28,6 @@ public class CoinMint : AbstractBuilding, IDisable
     {
         if (!IsActive()) return;
 
-        owner.TryStoreResource(GetDefinition().produceType, GetDefinition().ProduceLevel.Find(x => x.level == Level).value);
+        Owner.TryStoreResource(GetDefinition().produceType, GetDefinition().ProduceLevel.Find(x => x.level == Level).value);
     }
 }

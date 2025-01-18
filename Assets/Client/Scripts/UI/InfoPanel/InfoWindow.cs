@@ -37,10 +37,6 @@ namespace InfoPanel
         {
             map = GameObject.FindGameObjectWithTag("GameMap").GetComponent<Tilemap>();
             SetActive(false);
-
-            //Fake Building test
-            /*AbstractBuilding test = new Village(new ServerSide.ServerPlayer(0, "Test"), new Vector3Int(0, 0, 0));
-            Load(test);*/
         }
 
         public void SetActive(bool isActive)
@@ -79,7 +75,7 @@ namespace InfoPanel
                 GrimfieldTile tile = map.GetTile<GrimfieldTile>(pos);
                 TileDefinition definition = tile.definition;
 
-                icon.sprite = tile.sprite;
+                icon.sprite = definition.sprites[tile.spriteIndex];
                 title.text = definition.tileName;
                 description.text = definition.description;
             }

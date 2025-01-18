@@ -2,134 +2,99 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.Tilemaps;
 
-namespace Universal
+public class TerritoryRenderer : MonoBehaviour
 {
-    public class TerritoryRenderer : MonoBehaviour
+    public void RenderAll()
     {
-        [Flags]
-        public enum Sides
+        foreach (Transform children in this.transform)
         {
-            None = 1,
-            Left = 2,
-            Right = 4,
-            Top = 8,
-            Bottom = 16,
-            ALL = Left | Right | Top | Bottom,
+            GameObject.Destroy(children.gameObject);
         }
 
-        public static TerritoryRenderer Instance;
-        private Tilemap map;
-
-        public GameObject spritePrefab;
-        [Tooltip("0: Left line, 1: left-upper corner, 2: left-upper-bottom corner, 3: all corner")] public Sprite[] sprites;
-
-        [HideInInspector] public List<Territory> territories = new List<Territory>();
-
-        public void Start()
+        foreach (int clientId in Territory.GetUniqueClients())
         {
-            Instance = this;
-
-            map = GameObject.FindGameObjectWithTag("GameMap").GetComponent<Tilemap>();
-        }
-
-        public void RenderAll()
-        {
-            foreach (Transform children in transform)
-            {
-                Destroy(children.gameObject);
-            }
-
-            foreach (Territory territory in territories)
-            {
-                Render(territory, territory.GetAll(), territory.GetColor());
-            }
-        }
-
-        public void Render(Territory territory, List<Vector3Int> lands, Color color)
-        {
-            foreach (Vector3Int land in lands)
-            {
-                Vector3 pos = map.ToVector3(land);
-
-                Sides drawSides = Sides.None;
-
-                if (!territory.GetAll().Contains(new Vector3Int(land.x - 1, land.y))) //Empty left
-                {
-                    drawSides |= Sides.Left;
-                }
-
-                if (!territory.GetAll().Contains(new Vector3Int(land.x + 1, land.y))) //Empty right
-                {
-                    drawSides |= Sides.Right;
-                }
-
-                if (!territory.GetAll().Contains(new Vector3Int(land.x, land.y + 1))) //Empty upper
-                {
-                    drawSides |= Sides.Top;
-                }
-
-                if (!territory.GetAll().Contains(new Vector3Int(land.x, land.y - 1))) //Empty bottom
-                {
-                    drawSides |= Sides.Bottom;
-                }
-
-                if (drawSides != Sides.None)
-                {
-                    drawSides &= ~Sides.None; //Remove 'None' tag 
-                }
-                else continue; //Continue, because we dont need to draw anything
-
-                GameObject go = Instantiate(spritePrefab, new Vector3(pos.x + .5f, pos.y + .5f, -1.1f), Quaternion.identity);
-                go.transform.SetParent(transform, false);
-                SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
-                sr.color = color;
-
-                if (drawSides == Sides.ALL)
-                {
-                    sr.sprite = sprites[3];
-                }
-                else if (drawSides == (Sides.Top | Sides.Left))
-                {
-                    sr.sprite = sprites[1];
-                }
-                else if (drawSides == (Sides.Top | Sides.Right))
-                {
-                    sr.sprite = sprites[1];
-                    go.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 270f));
-                }
-                else if (drawSides == (Sides.Bottom | Sides.Left))
-                {
-                    sr.sprite = sprites[1];
-                    go.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 90f));
-                }
-                else if (drawSides == (Sides.Bottom | Sides.Right))
-                {
-                    sr.sprite = sprites[1];
-                    go.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 180f));
-                }
-                else if (drawSides == Sides.Left)
-                {
-                    sr.sprite = sprites[0];
-                }
-                else if (drawSides == Sides.Bottom)
-                {
-                    sr.sprite = sprites[0];
-                    go.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 90f));
-                }
-                else if (drawSides == Sides.Top)
-                {
-                    sr.sprite = sprites[0];
-                    go.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 270f));
-                }
-                else if (drawSides == Sides.Right)
-                {
-                    sr.sprite = sprites[0];
-                    go.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 180f));
-                }
-            }
+            RenderFor(clientId);
         }
     }
+
+    private void RenderFor(int clientId)
+    {
+        Color color = Color.black;
+        if (NetworkChecker.IsClient()) color = ClientSide.NetworkManager.Find(clientId).Color;
+        else color = ServerSide.NetworkManager.Find(clientId).Color;
+
+        List<Vector3> positions = new();
+        List<AbstractBuilding> buildings = new();
+        if (NetworkChecker.IsClient()) buildings = ClientSide.NetworkManager.Find(clientId).Buildings;
+        else buildings = ServerSide.NetworkManager.Find(clientId).Buildings;
+        foreach (AbstractBuilding building in buildings)
+        {
+            foreach(Vector3Int land in building.ClaimedLand)
+            {
+                int x = land.x;
+                int y = land.y;
+
+                if (Territory.GetTerritoryNeighborCount(x, y) < 4)
+                {
+                    positions.Add(new Vector3(land.x + 0.5f, land.y + 0.5f, -0.1f));
+                }
+            }
+        }
+
+        positions = SortPointsForLineRenderer(positions);
+
+        GameObject go = new GameObject("territory_" + clientId + "_" + Time.realtimeSinceStartup);
+        go.transform.parent = transform;
+        go.transform.position = new Vector3(0, 0, 0);
+        LineRenderer lineRenderer = go.AddComponent<LineRenderer>();
+        lineRenderer.positionCount = positions.Count;
+        lineRenderer.SetPositions(positions.ToArray());
+        lineRenderer.widthMultiplier = 0.1f;
+        lineRenderer.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
+
+        lineRenderer.startColor = color;
+        lineRenderer.endColor = color;
+        lineRenderer.loop = true;
+    }
+
+    private List<Vector3> SortPointsForLineRenderer(List<Vector3> points)
+    {
+        if (points == null || points.Count == 0)
+            return new List<Vector3>();
+
+        List<Vector3> sorted = new List<Vector3>();
+        HashSet<int> visited = new HashSet<int>();
+        Vector3 current = points[0];
+        sorted.Add(current);
+        visited.Add(0);
+
+        while (sorted.Count < points.Count)
+        {
+            float closestDistance = float.MaxValue;
+            int closestIndex = -1;
+
+            for (int i = 0; i < points.Count; i++)
+            {
+                if (visited.Contains(i)) continue;
+
+                float distance = Vector3.Distance(current, points[i]);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestIndex = i;
+                }
+            }
+
+            if (closestIndex != -1)
+            {
+                current = points[closestIndex];
+                sorted.Add(current);
+                visited.Add(closestIndex);
+            }
+        }
+
+        return sorted;
+    }
+
 }

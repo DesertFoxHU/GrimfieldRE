@@ -34,6 +34,7 @@ namespace ServerSide
             GeneretaMap();
 
             Message startGamePacket = Message.Create(MessageSendMode.reliable, ServerToClientPacket.LoadGameScene);
+            startGamePacket.Add(SizeX).Add(SizeY);
             NetworkManager.Instance.Server.SendToAll(startGamePacket);
         }
 
@@ -118,7 +119,7 @@ namespace ServerSide
             }
 
             map.RefreshAllTiles();
-            ServerSide.TerritoryRenderer.Instance.RenderAll();
+            Territory.Start(SizeX, SizeY);
             Debug.Log("Map is generated!");
         }
 
@@ -136,7 +137,6 @@ namespace ServerSide
         {
             TileDefinition definition = DefinitionRegistry.Instance.Find(type);
             int spriteIndex = definition.GetRandomSpriteIndex();
-            Debug.Log($"Generated spriteIndex {spriteIndex} {x} {y} for {type}");
 
             GrimfieldTile tile = map.GetOrInit(new Vector3Int(x, y, 0), definition);
             tile.spriteIndex = spriteIndex;

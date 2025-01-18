@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Quarry : AbstractBuilding
 {
-    public Quarry(ServerPlayer owner, Vector3Int position) : base(owner, position) 
+    public Quarry(ushort owner, Vector3Int position) : base(owner, position) 
     {
     }
 
@@ -14,6 +14,6 @@ public class Quarry : AbstractBuilding
 
     public override void OnTurnCycleEnded()
     {
-        owner.TryStoreResource(GetDefinition().produceType, GetDefinition().ProduceLevel.Find(x => x.level == Level).value);
+        Owner.TryStoreResource(GetDefinition().produceType, GetDefinition().ProduceLevel.Find(x => x.level == Level).value);
     }
 }

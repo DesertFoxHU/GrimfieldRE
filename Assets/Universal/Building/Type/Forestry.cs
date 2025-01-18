@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Forestry : AbstractBuilding, IResourceStorage
 {
-    public Forestry(ServerPlayer owner, Vector3Int position) : base(owner, position) 
+    public Forestry(ushort owner, Vector3Int position) : base(owner, position) 
     {
         BuildingStorage = new List<ResourceStorage>();
         foreach (ResourceHolder holder in GetDefinition().StorageCapacity)
@@ -30,7 +30,7 @@ public class Forestry : AbstractBuilding, IResourceStorage
         produce -= Storage[0].AddSafe(produce);
         if (produce > 0) //Remained some resource
         {
-            owner.TryStoreResource(GetDefinition().produceType, produce);
+            Owner.TryStoreResource(GetDefinition().produceType, produce);
         }
     }
 }

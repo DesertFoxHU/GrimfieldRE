@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class GoldMine : AbstractBuilding
 {
-    public GoldMine(ServerPlayer owner, Vector3Int position) : base(owner, position) 
+    public GoldMine(ushort owner, Vector3Int position) : base(owner, position) 
     {
     }
 
@@ -14,6 +14,6 @@ public class GoldMine : AbstractBuilding
 
     public override void OnTurnCycleEnded()
     {
-        owner.TryStoreResource(GetDefinition().produceType, GetDefinition().ProduceLevel.Find(x => x.level == Level).value);
+        Owner.TryStoreResource(GetDefinition().produceType, GetDefinition().ProduceLevel.Find(x => x.level == Level).value);
     }
 }

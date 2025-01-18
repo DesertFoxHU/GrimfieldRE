@@ -1,3 +1,4 @@
+using ClientSide;
 using InfoPanel;
 using Riptide;
 using System;
@@ -8,7 +9,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
-using Universal;
 
 public class PacketHandler : MonoBehaviour
 {
@@ -73,6 +73,10 @@ public class PacketHandler : MonoBehaviour
     [MessageHandler((ushort)ServerToClientPacket.LoadGameScene)]
     private static void MainGameLoad(Message message)
     {
+        int sizeX = message.GetInt();
+        int sizeY = message.GetInt();
+        Territory.Start(sizeX, sizeY);
+
         SceneManager.LoadScene("MainGame", LoadSceneMode.Additive);
         SceneManager.UnloadSceneAsync("LobbyScene");
     }
@@ -116,6 +120,9 @@ public class PacketHandler : MonoBehaviour
         SpriteRenderer render = go.AddComponent<SpriteRenderer>();
 
         render.sprite = DefinitionRegistry.Instance.Find(type).GetSpriteByLevel(level);
+
+        AbstractBuilding building = (AbstractBuilding)Activator.CreateInstance(AbstractBuilding.GetClass(type), clientID, pos);
+        NetworkManager.Find(clientID).Buildings.Add(building);
     }
 
     [MessageHandler((ushort)ServerToClientPacket.PlayerResourceUpdate)]
@@ -202,34 +209,6 @@ public class PacketHandler : MonoBehaviour
     {
         AbstractBuilding building = message.GetBuilding();
         FindAnyObjectByType<InfoWindow>().Load(building);
-    }
-
-    [MessageHandler((ushort)ServerToClientPacket.RenderTerritory)]
-    private static void RenderTerritory(Message message)
-    {
-        ushort clientID = message.GetUShort();
-        int ID = message.GetInt();
-        int index = message.GetInt();
-        int count = message.GetInt();
-        List<Vector3Int> claimed = new List<Vector3Int>(); 
-        for(int i = 0; i < count; i++)
-        {
-            Vector3Int v3 = message.GetVector3Int();
-            claimed.Add(v3);
-        }
-
-        ClientTerritory territory = (ClientTerritory) TerritoryRenderer.Instance.territories.Find(x => x.ID == ID);
-        if (territory == null)
-        {
-            territory = new ClientTerritory(clientID, ID, index, claimed);
-            TerritoryRenderer.Instance.territories.Add(territory);
-        }
-        else
-        {
-            territory.LoadPartly(index, claimed);
-        }
-
-        TerritoryRenderer.Instance.RenderAll();
     }
 
     [MessageHandler((ushort)ServerToClientPacket.SpawnEntity)]
@@ -341,5 +320,22 @@ public class PacketHandler : MonoBehaviour
     {
         int chunkCount = message.GetInt();
         Debug.Log($"Started loading {chunkCount} chunks");
+    }
+
+    [MessageHandler((ushort)ServerToClientPacket.UpdateTerritory)]
+    private static void UpdateTerritory(Message message)
+    {
+        ushort OwnerId = message.GetUShort();
+        int count = message.GetInt();
+        AbstractBuilding building = (AbstractBuilding) Activator.CreateInstance(AbstractBuilding.GetClass(BuildingType.Village), OwnerId, new Vector3Int(0,0,0));
+        NetworkManager.Find(OwnerId).Buildings.Add(building);
+        for (int i = 0; i < count; i++)
+        {
+            int x = message.GetInt();
+            int y = message.GetInt();
+            Territory.territoryGrid[x, y] = building;
+            building.ClaimedLand.Add(new Vector3Int(x, y, 0));
+        }
+        FindAnyObjectByType<TerritoryRenderer>().RenderAll();
     }
 }

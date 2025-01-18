@@ -78,25 +78,6 @@ namespace ServerSide
             NetworkManager.Instance.Server.Send(message, player.PlayerId);
         }
 
-        public static void RenderTerritory(ServerPlayer owner, AbstractBuilding building)
-        {
-            ServerTerritory territory = building.territory;
-            foreach (int index in territory.ClaimedLand.Keys)
-            {
-                List<Vector3Int> land = territory.ClaimedLand[index];
-                Message message = Message.Create(MessageSendMode.reliable, ServerToClientPacket.RenderTerritory);
-                message.Add(owner.PlayerId);
-                message.Add(territory.ID);
-                message.Add(index);
-                message.Add(land.Count);
-                foreach (Vector3Int v3 in land)
-                {
-                    message.Add(v3);
-                }
-                NetworkManager.Instance.Server.SendToAll(message);
-            }
-        }
-
         public static void SendChatMessageToAll(string text, bool forceOpen)
         {
             Message response = Message.Create(MessageSendMode.reliable, ServerToClientPacket.SendMessage);
@@ -135,7 +116,7 @@ namespace ServerSide
             message.Add(building.ID);
             NetworkManager.Instance.Server.SendToAll(message);
 
-            building.owner.Buildings.Remove(building);
+            building.Owner.Buildings.Remove(building);
         }
 
         public static void InitChunkLoadingState(ServerPlayer player, int chunkCount)
@@ -143,6 +124,18 @@ namespace ServerSide
             Message message = Message.Create(MessageSendMode.reliable, ServerToClientPacket.InitChunkLoadingState);
             message.Add(chunkCount);
             NetworkManager.Instance.Server.Send(message, player.PlayerId);
+        }
+
+        public static void UpdateTerritory(AbstractBuilding building)
+        {
+            Message message = Message.Create(MessageSendMode.reliable, ServerToClientPacket.UpdateTerritory);
+            message.Add(building.OwnerId);
+            message.Add(building.ClaimedLand.Count);
+            foreach(var c in building.ClaimedLand)
+            {
+                message.Add(c.x).Add(c.y);
+            }
+            NetworkManager.Instance.Server.SendToAll(message);
         }
     }
 }

@@ -13,18 +13,20 @@ public abstract class AbstractBuilding
     public readonly Guid ID = Guid.NewGuid();
     public Vector3Int Position { get; private set; }
     public int Level { get; private set; }
+    public ushort OwnerId { get; private set; }
     #region ServerSide
-    [JsonIgnore] public ServerPlayer owner { get; private set; }
     [JsonIgnore] public List<Vector3Int> ClaimedLand { get; private set; } = new List<Vector3Int>();
-    [JsonIgnore] public ServerTerritory territory;
     #endregion
 
-    public AbstractBuilding(ServerPlayer owner, Vector3Int position)
+    public AbstractBuilding(ushort ownedId, Vector3Int position)
     {
-        this.owner = owner;
+        this.OwnerId = ownedId;
         Position = position;
         Level = 1;
+        if (NetworkChecker.IsServer()) OnClaimLand(GameObject.FindGameObjectWithTag("GameMap").GetComponent<Tilemap>());
     }
+
+    public ServerPlayer Owner { get => ServerSide.NetworkManager.Find(OwnerId); }
 
     public static Type GetClass(BuildingType type)
     {

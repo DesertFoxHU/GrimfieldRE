@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Barrack : AbstractBuilding
 {
-    public Barrack(ServerPlayer owner, Vector3Int position) : base(owner, position) 
+    public Barrack(ushort owner, Vector3Int position) : base(owner, position) 
     {
     }
 

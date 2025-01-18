@@ -53,14 +53,18 @@ namespace ServerSide
                 foreach(AbstractBuilding building in player.Buildings)
                 {
                     building.OnTurnCycleEnded();
-                    if(building.GetDefinition() != null)
+                }
+
+                foreach(AbstractBuilding building in player.Buildings)
+                {
+                    if (building.GetDefinition() != null)
                     {
-                        if(building.GetDefinition().Upkeep != null || building.GetDefinition().Upkeep.Count > 0)
+                        if (building.GetDefinition().Upkeep != null || building.GetDefinition().Upkeep.Count > 0)
                         {
                             BuildingDefinition buildDef = building.GetDefinition();
                             if (!player.PayResources(buildDef.Upkeep.ToDictionary(x => x.type, x => x.Value), true))
                             {
-                                
+
                             }
                         }
                     }

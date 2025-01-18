@@ -7,7 +7,7 @@ using UnityEngine.Tilemaps;
 [Serializable]
 public class Village : AbstractBuilding, IResourceStorage
 {
-    public Village(ServerPlayer owner, Vector3Int position) : base(owner, position) 
+    public Village(ushort ownerId, Vector3Int position) : base(ownerId, position) 
     {
         BuildingStorage = new List<ResourceStorage>();
         foreach (ResourceHolder holder in GetDefinition().StorageCapacity)
@@ -18,10 +18,10 @@ public class Village : AbstractBuilding, IResourceStorage
             }));
         }
 
-        if (owner != null && owner.isFirstPlace)
+        if (Owner != null && Owner.isFirstPlace)
         {
             IsCapital = true;
-            owner.isFirstPlace = false;
+            Owner.isFirstPlace = false;
         }
     }
 
@@ -44,7 +44,7 @@ public class Village : AbstractBuilding, IResourceStorage
         produce -= Storage[0].AddSafe(produce);
         if (produce > 0) //Remained some resource
         {
-            owner.TryStoreResource(GetDefinition().produceType, produce);
+            Owner.TryStoreResource(GetDefinition().produceType, produce);
         }
     }
 }

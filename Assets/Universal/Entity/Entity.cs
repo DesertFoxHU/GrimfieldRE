@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 using System.Linq;
+using ClientSide;
 
 public class Entity : MonoBehaviour
 {

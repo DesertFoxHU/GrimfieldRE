@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using InfoPanel;
+using ClientSide;
 
 public class CursorAction : MonoBehaviour
 {
