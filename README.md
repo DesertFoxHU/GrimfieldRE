@@ -1,6 +1,6 @@
-**IMPORTANT!**
-I will continue the project in a new private repository (there are a lot of reasons, but the main of them is becuase I am planning to upload this game to steam)
-If you wish to be notified about updates you can find the game's itch.io page
+## IMPORTANT!
+I will continue the project in a new private repository (there are a lot of reasons, but the main of them is becuase I am planning to upload this game to steam)<br>
+If you wish to be notified about updates you can find the game's itch.io page: https://desertfoxhu.itch.io/grimfield
 
 This is a **turn-based multiplayer strategy game**.
 
